@@ -20,6 +20,7 @@ serverApi: ServerApiVersion.v1,
 async function run() {
   try {
     const usersCollection = client.db('resaleMarket').collection('users');
+    const productsCollection = client.db('resaleMarket').collection('products');
 
     // api for save user in mongodb
     app.post('/users', async(req, res)=>{
@@ -32,6 +33,15 @@ async function run() {
       const result = await usersCollection.insertOne(user);
       console.log(user)
       res.send(user);
+
+  });
+
+    // api for save product in mongodb
+    app.post('/addproduct', async(req, res)=>{
+      const product = req.body;
+      const result = await usersCollection.insertOne(product);
+      console.log(product)
+      res.send(result);
 
   });
     
