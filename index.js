@@ -43,6 +43,17 @@ async function run() {
       res.send(products);
     });
 
+    // get product by category
+
+    app.get('/dashboard/products/:category', async(req, res)=>{
+      const category = req.params.category;
+      const query = {category: category};
+      const result = await productsCollection.find(query).toArray();
+
+      // console.log(result);
+      res.send(result);
+    })
+
     //  get api create for testing admin
     app.get("/user/admin/:email", async (req, res) => {
       const email = req.params.email;
