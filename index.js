@@ -22,6 +22,34 @@ async function run() {
     const usersCollection = client.db('resaleMarket').collection('users');
     const productsCollection = client.db('resaleMarket').collection('products');
 
+    // get api for get all product from database
+    app.get('/products', async(req, res)=>{
+      const query = {};
+      const allproducts = await productsCollection.find(query).toArray();
+      req.res(allproducts);
+    });
+
+    // api for specific user product finding
+    app.get('/seller/myproduct', async (req, res)=>{
+      const email = req.query.email;
+      // console.log(email)
+      const query = {email: email};
+      const products = await productsCollection.find(query).toArray();
+      console.log(products)
+  
+
+      res.send(products);
+  });
+
+    //  get api create for testing admin
+    app.get('/user/admin/:email', async(req,res)=>{
+      const email = req.params.email;
+      console.log(email)
+      const query = {email: email}
+      const user = await usersCollection.findOne(query);
+      res.send({isAdmin: user?.role === 'admin'});
+  });
+
     // api for save user in mongodb
     app.post('/users', async(req, res)=>{
       const user = req.body;
@@ -39,7 +67,7 @@ async function run() {
     // api for save product in mongodb
     app.post('/addproduct', async(req, res)=>{
       const product = req.body;
-      const result = await usersCollection.insertOne(product);
+      const result = await productsCollection.insertOne(product);
       console.log(product)
       res.send(result);
 
