@@ -100,15 +100,24 @@ async function run() {
     // api for save user in mongodb
     app.post("/users", async (req, res) => {
       const user = req.body;
+      const email = user.email;
       const adminQuery = { role: "admin" };
+      const emailQuery = {email: email};
       const adminGet = await usersCollection.findOne(adminQuery);
+      const savedEmail = await usersCollection.findOne(emailQuery);
       if (adminGet == null) {
         user.role = "admin";
       }
-      const result = await usersCollection.insertOne(user);
-      console.log(user);
-      res.send(user);
+      if (savedEmail == null) {
+       const result = await usersCollection.insertOne(user);
+       res.send(result);
+      }
+      
+      console.log(savedEmail);
     });
+
+    // api for delete user from database
+    
 
     // api for save product in mongodb
     app.post("/addproduct", async (req, res) => {
