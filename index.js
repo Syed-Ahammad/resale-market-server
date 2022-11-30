@@ -24,6 +24,7 @@ async function run() {
     const usersCollection = client.db("resaleMarket").collection("users");
     const productsCollection = client.db("resaleMarket").collection("products");
     const blogsCollection = client.db("resaleMarket").collection("blogs");
+    const bookedProductCollection = client.db("resaleMarket").collection("productBooked");
 
     // get api for get all product from database
     app.get("/products", async (req, res) => {
@@ -134,6 +135,13 @@ async function run() {
       console.log(product);
       res.send(result);
     });
+
+    // api for booking product save on database
+    app.post('/product/booked', async(req, res)=>{
+      const booked = req.body;
+      const result = await bookedProductCollection.insertOne(booked);
+      res.send(result);
+    })
   } finally {
   }
 }
