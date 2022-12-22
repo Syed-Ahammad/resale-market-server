@@ -29,8 +29,8 @@ async function run() {
     // get api for get all product from database
     app.get("/products", async (req, res) => {
       const query = {};
-      const allproducts = await productsCollection.find(query).toArray();
-      req.res(allproducts);
+      const allProducts = await productsCollection.find(query).toArray();
+      req.res(allProducts);
     });
 
     // api for specific user product finding
@@ -39,7 +39,7 @@ async function run() {
       // console.log(email)
       const query = { email: email };
       const products = await productsCollection.find(query).toArray();
-      console.log(products);
+      // console.log(products);
 
       res.send(products);
     });
@@ -58,16 +58,33 @@ async function run() {
     //  get api create for testing admin
     app.get("/user/admin/:email", async (req, res) => {
       const email = req.params.email;
-      console.log(email);
+      // console.log(email);
       const query = { email: email };
       const user = await usersCollection.findOne(query);
       res.send({ isAdmin: user?.role === "admin" });
     });
+
+    // api for loading all products 
+    app.get("/admin/allproducts/:email", async(req, res)=>{
+      const email = req.params.email;
+      const query = {email: email};
+      const user = await usersCollection.findOne(query);
+      const isAdmin = user?.role === "admin";
+      const queryProduct = {};
+      const allProducts = await productsCollection.find(queryProduct).toArray()
+      // console.log(allProducts)
+      if(isAdmin){
+        res.send(allProducts);
+      }
+      else{
+        res.send([]);
+      }
+    })
     
     //  api create for testing buyer
     app.get("/user/buyer/:email", async (req, res) => {
       const email = req.params.email;
-      console.log(email);
+      // console.log(email);
       const query = { email: email };
       const user = await usersCollection.findOne(query);
       res.send({ isBuyer: user?.role === "buyer" });
@@ -75,10 +92,10 @@ async function run() {
     //  api create for testing seller
     app.get("/user/seller/:email", async (req, res) => {
       const email = req.params.email;
-      console.log(email);
+      // console.log(email);
       const query = { email: email };
       const user = await usersCollection.findOne(query);
-      res.send({ isBuyer: user?.role === "seller" });
+      res.send({ isSeller: user?.role === "seller" });
     });
 
     // api for get product by category
@@ -132,7 +149,7 @@ async function run() {
     app.post("/addproduct", async (req, res) => {
       const product = req.body;
       const result = await productsCollection.insertOne(product);
-      console.log(product);
+      // console.log(product);
       res.send(result);
     });
 
