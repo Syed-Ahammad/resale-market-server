@@ -80,6 +80,22 @@ async function run() {
         res.send([]);
       }
     })
+    // api for loading all sellers 
+    app.get("/admin/allsellers/:email", async(req, res)=>{
+      const email = req.params.email;
+      const query = {email: email};
+      const user = await usersCollection.findOne(query);
+      const isAdmin = user?.role === "admin";
+      const querySeller = {role: "seller"};
+      const allSellers = await usersCollection.find(querySeller).toArray()
+      // console.log(allSellers)
+      if(isAdmin){
+        res.send(allSellers);
+      }
+      else{
+        res.send([]);
+      }
+    })
     
     //  api create for testing buyer
     app.get("/user/buyer/:email", async (req, res) => {
